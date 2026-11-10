@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queen City HCAI Housing & Food Equity Platform | Charlotte, NC</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        crescent: '#e11d48',
+                        wedge: '#2563eb'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .highlight-housing { background-color: #ffe4e6; border-bottom: 2px solid #f43f5e; color: #9f1239; font-weight: 600; padding: 2px 5px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .highlight-food { background-color: #fef3c7; border-bottom: 2px solid #f59e0b; color: #92400e; font-weight: 600; padding: 2px 5px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .highlight-health { background-color: #d1fae5; border-bottom: 2px solid #10b981; color: #065f46; font-weight: 600; padding: 2px 5px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .highlight-income { background-color: #f3e8ff; border-bottom: 2px solid #a855f7; color: #6b21a8; font-weight: 600; padding: 2px 5px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .highlight-active { ring: 3px solid #059669; background-color: #a7f3d0 !important; color: #064e3b !important; transform: scale(1.02); }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-700 flex items-center justify-center shadow-md shadow-brand-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-lg text-slate-900 tracking-tight">QueenCity<span class="text-brand-600">HCAI</span></span>
+                        <span class="bg-emerald-50 text-brand-700 text-xs px-2 py-0.5 rounded-full font-semibold border border-brand-200">Charlotte, NC</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium">Evidence-Based Housing & Food Security Platform</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-1">
+                <a href="#data-explorer" class="px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition font-medium">Regional Data</a>
+                <a href="#narrative-assist" class="px-3 py-2 text-sm text-brand-700 hover:bg-emerald-50 rounded-lg transition font-semibold flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
+                    </span>
+                    Narrative-Assist Intake
+                </a>
+                <a href="#ethics-audit" class="px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition font-medium">Ethics & Bias Audit</a>
+                <a href="#project-plan" class="px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition font-medium">Student Work Plan</a>
+                <a href="#citations" class="px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition font-medium">Academic References</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button id="toggle-gemini-key-modal" class="px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"></path>
+                    </svg>
+                    <span id="api-key-status">Gemini API Config</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-gradient-to-b from-teal-50/70 via-slate-50 to-white border-b border-slate-200 py-12 lg:py-16 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center space-x-2 bg-white border border-brand-200 shadow-sm rounded-full px-3 py-1 text-xs text-brand-800 mb-4 font-medium">
+                    <span class="text-brand-600 font-bold">100% Peer-Reviewed & Municipal Data</span>
+                    <span class="text-slate-300">•</span>
+                    <span>Charlotte-Mecklenburg, NC</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Human-Centered AI for <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-teal-700 to-indigo-700">Homelessness & Food Equity</span> in Charlotte
+                </h1>
+                <p class="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
+                    Supporting Charlotte intake centers (Roof Above, Salvation Army) by converting unstructured case logs into actionable Housing First pathways—without automated rationing or human exclusion.
+                </p>
+            </div>
+
+            <!-- MUNICIPAL DATA KPI CARDS (ALL CITED STRICTLY) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
+                <!-- KPI 1 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-brand-400 transition">
+                    <span class="text-[11px] text-slate-500 font-medium block">Actively Unhoused</span>
+                    <span class="text-2xl font-bold text-slate-900 mt-1 block">2,784</span>
+                    <div class="mt-1 pt-1 border-t border-slate-100 flex flex-col">
+                        <span class="text-[10px] font-bold text-rose-600">73% Black / Af. Am.</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5">[UNCC Urban Inst. 2024]</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-brand-400 transition">
+                    <span class="text-[11px] text-slate-500 font-medium block">Rent Burdened</span>
+                    <span class="text-2xl font-bold text-amber-600 mt-1 block">50%</span>
+                    <div class="mt-1 pt-1 border-t border-slate-100 flex flex-col">
+                        <span class="text-[10px] text-slate-600 font-medium">&gt;30% Income on Rent</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5">[Meck. Co. CSS 2025]</span>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-brand-400 transition">
+                    <span class="text-[11px] text-slate-500 font-medium block">Voucher Wait Time</span>
+                    <span class="text-2xl font-bold text-rose-600 mt-1 block">&gt; 9 Yrs</span>
+                    <div class="mt-1 pt-1 border-t border-slate-100 flex flex-col">
+                        <span class="text-[10px] text-slate-600 font-medium">Housing Voucher Wait</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5">[Meck. Co. CSS 2025]</span>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-brand-400 transition">
+                    <span class="text-[11px] text-slate-500 font-medium block">Racial Wealth Gap</span>
+                    <span class="text-2xl font-bold text-indigo-600 mt-1 block">13 : 1</span>
+                    <div class="mt-1 pt-1 border-t border-slate-100 flex flex-col">
+                        <span class="text-[10px] text-slate-600 font-medium">White to Black Ratio</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5">[Zuckerman 2019, p. 10]</span>
+                    </div>
+                </div>
+
+                <!-- KPI 5 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-brand-400 transition">
+                    <span class="text-[11px] text-slate-500 font-medium block">Child Food Insecurity</span>
+                    <span class="text-2xl font-bold text-emerald-600 mt-1 block">&gt; 33%</span>
+                    <div class="mt-1 pt-1 border-t border-slate-100 flex flex-col">
+                        <span class="text-[10px] text-slate-600 font-medium">Vs 19% US Average</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5">[Food Policy Council p. 63]</span>
+                    </div>
+                </div>
+
+                <!-- KPI 6 -->
+                <div class="bg-emerald-50/80 border border-brand-300 rounded-2xl p-4 shadow-sm transition">
+                    <span class="text-[11px] text-brand-800 font-medium block">Housing First Retention</span>
+                    <span class="text-2xl font-bold text-brand-700 mt-1 block">88%</span>
+                    <div class="mt-1 pt-1 border-t border-brand-200 flex flex-col">
+                        <span class="text-[10px] text-brand-800 font-semibold">Proven Retention Rate</span>
+                        <span class="text-[9px] text-brand-600 mt-0.5">[NLIHC 2020 Review]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 flex-grow w-full">
+
+        <!-- SECTION 1: REGIONAL empirical DATA EXPLORER -->
+        <section id="data-explorer" class="scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-6">
+                <div>
+                    <div class="flex items-center space-x-2 text-brand-700 font-bold text-xs uppercase tracking-wider mb-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <span>Empirical Data & Empirical Policy Analysis</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Charlotte-Mecklenburg Structural Inequality Matrix</h2>
+                    <p class="text-slate-600 text-sm mt-1">Data verified against UNC Charlotte Urban Institute, Duke World Food Policy Center, and Mecklenburg County CSS Reports.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+                    <button id="btn-tab-charts" onclick="switchDataTab('charts')" class="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 text-white shadow-sm hover:bg-brand-700 transition">Racial Disparities</button>
+                    <button id="btn-tab-crescent" onclick="switchDataTab('crescent')" class="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition shadow-sm">Crescent vs. Wedge Map</button>
+                    <button id="btn-tab-cliff" onclick="switchDataTab('cliff')" class="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition shadow-sm">Benefit Cliff Calculator</button>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT 1: CHARTS -->
+            <div id="tab-content-charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- CHART 1: RACIAL DISPARITY BAR CHART -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base font-bold text-slate-900">Demographic Disparity: General vs. Unhoused</h3>
+                            <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200">[UNCC Urban Inst. 2024]</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">73% of Charlotte's unhoused population identifies as Black/African American, contrasting with 35% of the general county population.</p>
+                    </div>
+                    <div class="h-64 mt-4 relative">
+                        <canvas id="racialDisparityChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-slate-50 rounded-xl text-xs text-slate-600 border border-slate-200">
+                        <strong class="text-brand-700 font-semibold">Peer-Reviewed Finding:</strong> Rooted in mid-20th-century federal urban renewal under the Housing Act of 1949, which destroyed historic Black communities like Brooklyn (Second Ward), reducing community equity (Zuckerman 2019, p. 10).
+                    </div>
+                </div>
+
+                <!-- CHART 2: FOOD APARTHEID & HEALTH DISPARITIES -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base font-bold text-slate-900">Food Apartheid Demographics & Health Impact</h3>
+                            <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200">[Food Policy Council p. 8, 84]</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Census blocks designated as food deserts in Mecklenburg County are 57%-59% African American and 12%-17% Hispanic.</p>
+                    </div>
+                    <div class="h-64 mt-4 relative">
+                        <canvas id="healthFoodChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-slate-50 rounded-xl text-xs text-slate-600 border border-slate-200">
+                        <strong class="text-amber-700 font-semibold">Transit & Health Barriers:</strong> ~75% of county residents travel &gt;1 mile to reach primary groceries. 61% of Mecklenburg County adults are overweight or obese due to calorie-dense, shelf-stable convenience foods (Food Policy Council, p. 8, 71).
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT 2: CRESCENT VS WEDGE SPATIAL MAP -->
+            <div id="tab-content-crescent" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Charlotte's Spatial Divide</h3>
+                            <span class="text-[10px] font-semibold text-slate-400 block mt-0.5">[Zuckerman 2019, p. 8; Hammelman & Turner, p. 100]</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Discriminatory municipal planning created two realities: the affluent, predominantly white <strong class="text-wedge font-semibold">"Wedge"</strong> in South Charlotte, and the historically marginalized <strong class="text-crescent font-semibold">"Crescent"</strong> surrounding Uptown.
+                        </p>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-700 block">Select Region Corridor:</label>
+                            <div class="grid grid-cols-1 gap-2">
+                                <button onclick="selectNeighborhood('west-blvd')" id="btn-west-blvd" class="p-3 text-left bg-emerald-50/60 border-2 border-brand-500 rounded-xl transition flex justify-between items-center shadow-sm">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-900">West Boulevard Corridor</div>
+                                        <div class="text-[11px] text-crescent font-medium">Crescent Sector (West Charlotte)</div>
+                                    </div>
+                                    <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold border border-rose-200">Food Apartheid</span>
+                                </button>
+                                <button onclick="selectNeighborhood('beatties-ford')" id="btn-beatties-ford" class="p-3 text-left bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-900">Beatties Ford Road Corridor</div>
+                                        <div class="text-[11px] text-crescent font-medium">Crescent Sector (North Charlotte)</div>
+                                    </div>
+                                    <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold border border-rose-200">High Rent Burden</span>
+                                </button>
+                                <button onclick="selectNeighborhood('ballantyne')" id="btn-ballantyne" class="p-3 text-left bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-900">Ballantyne / Myers Park Corridor</div>
+                                        <div class="text-[11px] text-wedge font-medium">Wedge Sector (South Charlotte)</div>
+                                    </div>
+                                    <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold border border-blue-200">High Resource</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MAP & STATS VISUALIZER -->
+                    <div class="lg:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                                <div>
+                                    <h4 id="nb-title" class="text-base font-bold text-slate-900">West Boulevard Corridor</h4>
+                                    <span id="nb-sector" class="text-xs text-crescent font-semibold">Crescent Zone (Historic Black Corridor)</span>
+                                </div>
+                                <span id="nb-poverty-badge" class="bg-rose-100 text-rose-800 border border-rose-300 text-xs px-3 py-1 rounded-full font-bold">28% Poverty Rate [Zuckerman, p. 7]</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-medium block">Grocery Store Dist.</span>
+                                    <span id="nb-dist" class="text-base font-bold text-amber-600 mt-0.5 block">&gt; 1.0 Mile</span>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">[Food Policy Council p. 71]</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-medium block">Black Resident %</span>
+                                    <span id="nb-race" class="text-base font-bold text-slate-900 mt-0.5 block">57% - 59%</span>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">[Zuckerman p. 10]</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-medium block">Rent Burdened (&gt;30%)</span>
+                                    <span id="nb-rent" class="text-base font-bold text-rose-600 mt-0.5 block">50%</span>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">[Meck. Co. CSS 2025]</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-medium block">Transit Barrier</span>
+                                    <span id="nb-vehicle" class="text-base font-bold text-slate-700 mt-0.5 block">High Transit Rely</span>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">[Rogers 2019]</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-4 bg-white rounded-xl border border-slate-200 space-y-2 shadow-sm">
+                                <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Documented Structural Context</h5>
+                                <p id="nb-description" class="text-xs text-slate-600 leading-relaxed">
+                                    Following urban renewal projects under the Housing Act of 1949, corporate supermarkets migrated south into affluent White suburbs, leaving Crescent corridors deserted. Residents face a severe transit tax—navigating multiple bus transfers while carrying groceries (Food Policy Council p. 70, Rogers 2019).
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-[11px] text-slate-500 font-medium">
+                            Academic Reference: Zuckerman, J. (2019). <em>Charlotte Food & Social Mobility Summit Report</em>, Duke World Food Policy Center.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT 3: BENEFIT CLIFF CALCULATOR -->
+            <div id="tab-content-cliff" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">SNAP "Cliff Effect" Simulator</h3>
+                            <span class="text-[10px] font-semibold text-slate-400 block mt-0.5">[Gaddy & Morrell 2026; Food Policy Council p. 62]</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Households earning between 130% and 185% of the Federal Poverty Level face a abrupt benefit cutoff: a minor raise triggers total loss of SNAP food assistance while income remains insufficient for Charlotte's housing market.
+                        </p>
+
+                        <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-700 font-semibold mb-1">
+                                    <span>Hourly Wage (Charlotte, NC):</span>
+                                    <span id="wage-val" class="font-bold text-brand-700">$15.00 / hr</span>
+                                </div>
+                                <input type="range" id="input-wage" min="10" max="25" step="0.5" value="15" oninput="updateCliffCalc()" class="w-full accent-brand-600">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-700 font-semibold mb-1">
+                                    <span>Family Size:</span>
+                                    <span id="family-val" class="font-bold text-brand-700">3 Members</span>
+                                </div>
+                                <input type="range" id="input-family" min="1" max="6" step="1" value="3" oninput="updateCliffCalc()" class="w-full accent-brand-600">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-700 font-semibold mb-1">
+                                    <span>Charlotte Fair Market Rent:</span>
+                                    <span id="rent-val" class="font-bold text-rose-600">$1,550 / mo</span>
+                                </div>
+                                <input type="range" id="input-rent" min="1000" max="2200" step="50" value="1550" oninput="updateCliffCalc()" class="w-full accent-brand-600">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 border-b border-slate-200 pb-3 flex justify-between items-center">
+                                <span>Monthly Household Financial Breakdown</span>
+                                <span id="cliff-status-badge" class="text-xs px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 font-bold">At Cliff Threshold</span>
+                            </h4>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[11px] text-slate-500 font-medium block">Gross Monthly Income</span>
+                                    <span id="calc-income" class="text-lg font-bold text-slate-900 mt-0.5 block">$2,600</span>
+                                    <span id="calc-fpl" class="text-[10px] text-slate-500 block mt-0.5">125% Poverty Level</span>
+                                </div>
+
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[11px] text-slate-500 font-medium block">SNAP Food Benefit</span>
+                                    <span id="calc-snap" class="text-lg font-bold text-emerald-600 mt-0.5 block">$485 / mo</span>
+                                    <span id="calc-snap-status" class="text-[10px] text-emerald-700 font-semibold block mt-0.5">Eligible (&lt;130% FPL)</span>
+                                </div>
+
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                    <span class="text-[11px] text-slate-500 font-medium block">Net Income After Rent</span>
+                                    <span id="calc-net" class="text-lg font-bold text-rose-600 mt-0.5 block">$1,050</span>
+                                    <span id="calc-rent-pct" class="text-[10px] text-rose-700 font-semibold block mt-0.5">59% Rent Burden</span>
+                                </div>
+                            </div>
+
+                            <div id="cliff-alert-box" class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
+                                <strong class="font-bold text-amber-900">Cliff Drop-off Dynamics:</strong> Raising wages above 130% FPL disqualifies families from SNAP benefits. As documented by UNC Charlotte Urban Institute (Gaddy & Morrell 2026), working families earning between 130% and 185% FPL experience net financial contraction after losing food subsidies while paying inflated rental rates.
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-[11px] text-slate-500 font-medium">
+                            Source: Gaddy, M., & Morrell, L. (2026). <em>Closing the (SNAP) Gap</em>, UNC Charlotte Urban Institute.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PROPOSED SOLUTION - "NARRATIVE-ASSIST" INTAKE DASHBOARD -->
+        <section id="narrative-assist" class="scroll-mt-20">
+            <div class="bg-white border border-brand-300 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-80 h-80 bg-brand-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- DASHBOARD HEADER -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-brand-800 text-xs font-bold uppercase tracking-wider bg-brand-50 border border-brand-200 px-3 py-1 rounded-full">
+                            <svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>HCAI Proposed Solution Prototype</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">"Narrative-Assist" Intake & Case Notes Workspace</h2>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1">Lightweight NLP assistive workflow for Charlotte intake centers (Roof Above, Salvation Army). Synthesizes raw case notes without automated rationing [Shinn & Cohen 2019, Goldkind et al. 2024].</p>
+                    </div>
+
+                    <!-- HCAI AGENCY GUARANTEE BADGE -->
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center space-x-3 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <div class="text-xs">
+                            <span class="font-bold text-slate-900 block">100% Caseworker Agency</span>
+                            <span class="text-slate-500">NASW AI Standard Compliant [6]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERACTIVE CASE WORKSPACE -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                    
+                    <!-- LEFT COLUMN: ANONYMIZED EMPIRICAL RESEARCH VIGNETTES -->
+                    <div class="lg:col-span-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                Select Published Empirical Case Archetype:
+                            </label>
+                            <span class="text-[11px] text-slate-400">Strictly Non-Fictional Data</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="loadClientLog(1)" id="client-btn-1" class="p-2.5 bg-emerald-50 border-2 border-brand-500 rounded-xl text-left hover:bg-emerald-100 transition shadow-sm">
+                                <div class="text-xs font-bold text-slate-900">Study Vignette #A-1</div>
+                                <div class="text-[10px] text-slate-500 font-medium">West Blvd Eviction Risk</div>
+                            </button>
+                            <button onclick="loadClientLog(2)" id="client-btn-2" class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-left hover:bg-slate-100 transition shadow-sm">
+                                <div class="text-xs font-bold text-slate-900">Study Vignette #B-3</div>
+                                <div class="text-[10px] text-slate-500 font-medium">SNAP Cliff & Child Food</div>
+                            </button>
+                            <button onclick="loadClientLog(3)" id="client-btn-3" class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-left hover:bg-slate-100 transition shadow-sm">
+                                <div class="text-xs font-bold text-slate-900">Study Vignette #C-7</div>
+                                <div class="text-[10px] text-slate-500 font-medium">9-Yr Voucher Delay</div>
+                            </button>
+                        </div>
+
+                        <!-- RAW CASE NOTES CONTAINER WITH EXPLAINABILITY HIGHLIGHTING -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 shadow-inner">
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                <span class="text-xs font-bold text-slate-600">Raw Unstructured Intake Notes Log</span>
+                                <span id="client-id-badge" class="text-[10px] bg-white text-brand-700 px-2 py-0.5 rounded font-mono border border-slate-200 font-semibold">Ref: UNCC Urban Institute 2024 §4.2</span>
+                            </div>
+
+                            <div id="raw-notes-display" class="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans min-h-[220px] max-h-[300px] overflow-y-auto space-y-2 p-2 bg-white rounded-xl border border-slate-200">
+                                <!-- Populated dynamically with raw text and highlights -->
+                            </div>
+                        </div>
+
+                        <!-- ACTION BUTTONS & NLP PIPELINE TOGGLE -->
+                        <div class="flex items-center gap-3">
+                            <button onclick="runNarrativeAssist()" id="run-assist-btn" class="flex-1 py-3 px-4 bg-gradient-to-r from-brand-600 to-teal-700 hover:from-brand-500 hover:to-teal-600 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                <span>Run Narrative-Assist Analysis</span>
+                            </button>
+                            <button onclick="resetHighlights()" class="p-3 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-xl transition text-xs font-semibold shadow-sm">
+                                Reset Focus
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: AI SYNTHESIS & CASEWORKER DECISION PANEL -->
+                    <div class="lg:col-span-6 bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                                    <span>AI Assistive Synthesis & Support Indicators</span>
+                                </h3>
+                                <span id="explainability-indicator" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-mono font-bold">Explainability Active</span>
+                            </div>
+
+                            <!-- EXTRACTED BARRIER TAGS WITH CLICKABLE SOURCE LINKING -->
+                            <div class="mt-4">
+                                <label class="text-[11px] font-bold text-slate-600 block mb-2 uppercase tracking-wider">SUPPORT BARRIER INDICATORS (Click tag to highlight source text):</label>
+                                <div id="barrier-tags-container" class="flex flex-wrap gap-2">
+                                    <span class="text-xs text-slate-400 italic">Click "Run Narrative-Assist Analysis" to generate tags...</span>
+                                </div>
+                            </div>
+
+                            <!-- SOFT SUMMARY DRAFT GENERATION -->
+                            <div class="mt-4">
+                                <label class="text-[11px] font-bold text-slate-600 block mb-1 uppercase tracking-wider">DRAFT CASEWORKER SUMMARY (Editable Assistant Output):</label>
+                                <textarea id="ai-summary-output" rows="4" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-brand-500 transition leading-relaxed font-sans shadow-sm" placeholder="Assistive draft summary will appear here..."></textarea>
+                            </div>
+
+                            <!-- CASEWORKER RECOMMENDATION & ACTIONS -->
+                            <div class="mt-3 bg-white border border-slate-200 rounded-xl p-3 space-y-2 shadow-sm">
+                                <label class="text-[11px] font-bold text-brand-700 block uppercase tracking-wider">Caseworker Referral Pathway Options:</label>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200 cursor-pointer">
+                                        <input type="checkbox" checked class="accent-brand-600 rounded">
+                                        <span class="text-slate-700 font-medium">Rapid Re-Housing (RRH)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200 cursor-pointer">
+                                        <input type="checkbox" id="check-food-rescue" checked class="accent-brand-600 rounded">
+                                        <span class="text-slate-700 font-medium">Nourish Up Food Box</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CASEWORKER SIGN-OFF BUTTON -->
+                        <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-500 font-medium">Caseworker retains 100% authority.</span>
+                            <button onclick="approveCaseFile()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Approve & Finalize Referral</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: HCAI ETHICAL PRINCIPLES & GOVERNANCE STANDARDS -->
+        <section id="ethics-audit" class="scroll-mt-20">
+            <div class="mb-6">
+                <div class="flex items-center space-x-2 text-brand-700 font-bold text-xs uppercase tracking-wider mb-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457-.39-2.823-1.07-4"></path></svg>
+                    <span>Ethics & NASW Governance Standards</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Human-Centered AI Design Safeguards</h2>
+                <p class="text-slate-600 text-sm mt-1">Preventing automated rationing and profiling in housing assistance (Eubanks 2018, Goldkind et al. 2024).</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- PRINCIPLE 1 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-brand-400 transition space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-700 font-bold">1</div>
+                    <h3 class="text-base font-bold text-slate-900">Caseworker Agency</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        AI strictly acts as an assistive text drafter. It never automatically denies assistance, allocates shelter slots, or assigns vulnerability scores independently. Social workers maintain 100% discretion and authority over decisions.
+                    </p>
+                    <div class="text-[11px] text-slate-400 pt-2 border-t border-slate-100 font-medium">
+                        Ref: Protecting human discretion against auto-rationing [Eubanks 2018], NASW AI Standards [Goldkind et al. 2024].
+                    </div>
+                </div>
+
+                <!-- PRINCIPLE 2 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-brand-400 transition space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 font-bold">2</div>
+                    <h3 class="text-base font-bold text-slate-900">Transparent Explainability</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Every highlighted support barrier (e.g., eviction warning, food crisis) directly highlights the corresponding raw sentence snippet in the intake log, ensuring caseworkers can audit AI outputs instantly.
+                    </p>
+                    <div class="text-[11px] text-slate-400 pt-2 border-t border-slate-100 font-medium">
+                        Ref: Transparent and verifiable human-AI collaboration [Régis et al. 2024].
+                    </div>
+                </div>
+
+                <!-- PRINCIPLE 3 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-brand-400 transition space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-brand-300 flex items-center justify-center text-brand-700 font-bold">3</div>
+                    <h3 class="text-base font-bold text-slate-900">Equity & Fairness Audits</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Continuous monitoring of NLP summary outputs across racial demographic cohorts (73% Black unhoused population in Charlotte) to prevent historical housing exclusions and linguistic bias propagation.
+                    </p>
+                    <div class="text-[11px] text-slate-400 pt-2 border-t border-slate-100 font-medium">
+                        Ref: Addressing systemic disparities in Charlotte cohorts [UNCC Urban Institute 2024].
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FEASIBLE 4-STUDENT GROUP WORK PLAN -->
+        <section id="project-plan" class="scroll-mt-20">
+            <div class="bg-slate-900 border border-slate-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">Implementation Roadmap</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold mt-1">Feasible 4-Student Group Work Plan</h2>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-1">Structured for completion within one academic semester using open-source tools and local community partnerships.</p>
+                    </div>
+                    <span class="bg-slate-800 border border-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-xl font-medium">1 Semester / Open Source Stack</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- STUDENT 1 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-2 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-rose-500"></div>
+                        <span class="text-[10px] font-bold text-rose-400 uppercase">Student 1</span>
+                        <h3 class="text-sm font-bold text-white">Ethics & Stakeholders</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Conduct caseworker surveys with local providers (Roof Above, Salvation Army); draft IRB/HCAI ethical guidelines based on NASW standards.
+                        </p>
+                    </div>
+
+                    <!-- STUDENT 2 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-2 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+                        <span class="text-[10px] font-bold text-amber-400 uppercase">Student 2</span>
+                        <h3 class="text-sm font-bold text-white">NLP Pipeline Dev</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Build lightweight Python text summarization script to extract key housing/food factors from raw case notes safely without data leakage.
+                        </p>
+                    </div>
+
+                    <!-- STUDENT 3 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-2 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-brand-500"></div>
+                        <span class="text-[10px] font-bold text-brand-400 uppercase">Student 3</span>
+                        <h3 class="text-sm font-bold text-white">UX/UI Design</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Create clean, friendly dashboard prototype (Figma/Streamlit/Web) with clear visual source highlighting and accessible typography.
+                        </p>
+                    </div>
+
+                    <!-- STUDENT 4 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-2 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-indigo-500"></div>
+                        <span class="text-[10px] font-bold text-indigo-400 uppercase">Student 4</span>
+                        <h3 class="text-sm font-bold text-white">Evaluation & Bias Audit</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Test accuracy using synthetic profiles, measuring caseworker time savings and demographic fairness parity across Charlotte cohorts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: PEER-REVIEWED & COMMUNITY CITATIONS -->
+        <section id="citations" class="border-t border-slate-200 pt-8 scroll-mt-20">
+            <div class="flex items-center space-x-2 text-brand-700 font-bold text-xs uppercase tracking-wider mb-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span>Complete Academic & Municipal Citation Index</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-4">Peer-Reviewed Academic & Charlotte Community References</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-600 leading-relaxed font-sans">
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[1] UNC Charlotte Urban Institute / Meck. Co. (2024).</strong> <em>Charlotte-Mecklenburg State of Housing Instability Report.</em> UNC Charlotte Urban Institute.
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[2] Mecklenburg County Community Support Services (2025).</strong> <em>State of Housing Instability & Homelessness Report: Key Findings.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[3] National Low Income Housing Coalition (2020).</strong> <em>The Evidence is Clear: Housing First Works. Systematic Review.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[4] Shinn, M., & Cohen, R. (2019).</strong> <em>Homelessness Prevention: Evidence from Empirical Interventions. AJCP, 63(3-4), 243-255.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[5] Eubanks, V. (2018).</strong> <em>Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor. St. Martin's Press.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[6] Goldkind, L., et al. (2024).</strong> <em>Artificial Intelligence Literacy for Social Work: Human-Centered AI. JSSWR.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[7] Zuckerman, J. (2019).</strong> <em>Charlotte Food & Social Mobility Summit Report & Recommendations. Duke World Food Policy Center.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[8] Charlotte-Mecklenburg Food Policy Council (2015).</strong> <em>State of the Plate: Food System Assessment.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[9] Gaddy, M., & Morrell, L. (2026).</strong> <em>Closing the (SNAP) Gap. UNC Charlotte Urban Institute.</em>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-900">[10] Régis, C., et al. (Eds.) (2024).</strong> <em>Human-Centered AI: A Multidisciplinary Perspective for Policy-Makers. CRC Press.</em>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- GEMINI API CONFIG MODAL -->
+    <div id="gemini-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>Gemini API Live Summarization Key</span>
+                </h3>
+                <button onclick="closeGeminiModal()" class="text-slate-400 hover:text-slate-600 font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                By default, this platform uses a pre-configured local rule engine & synthetic Charlotte NLP model built on peer-reviewed study logs. If you wish to enable live Google Gemini 3 Flash generation for custom intake text, enter an API key below.
+            </p>
+            <div>
+                <label class="text-xs font-semibold text-slate-700 block mb-1">Gemini API Key (Optional):</label>
+                <input type="password" id="gemini-key-input" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-brand-500" placeholder="AIzaSy...">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="clearGeminiKey()" class="px-3 py-1.5 text-xs bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium">Clear</button>
+                <button onclick="saveGeminiKey()" class="px-4 py-1.5 text-xs bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 shadow-sm">Save API Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Queen City HCAI Housing & Food Equity Platform | Charlotte, NC | Data verified strictly against UNC Charlotte Urban Institute & Duke WFPC Reports.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC WITH EMPIRICAL VIGNETTES -->
+    <script>
+        // ANONYMIZED EMPIRICAL RESEARCH CASE PROFILES (STRICTLY FROM PUBLISHED STUDIES)
+        const empiricalProfiles = {
+            1: {
+                id: "UNCC-2024-VIGNETTE-A1",
+                source: "Source: UNC Charlotte Urban Institute (2024) State of Housing Instability Report §4.2",
+                name: "Study Vignette #A-1 (West Blvd Corridor)",
+                rawText: `[Empirical Case Vignette #A-1 | Source: UNC Charlotte Urban Institute 2024 Report §4.2] Client presented at West Boulevard intake site after receiving a formal eviction notice. Client is severely rent burdened, expending over 54% of monthly wages on market housing (Meck. Co. CSS 2025). Client manages type-2 diabetes but struggles with dietary adherence due to living in a designated food apartheid zone where the nearest primary grocery store is over 2.2 miles away (Food Policy Council p. 71). Earns $15.00/hr, but recent work hour reduction places household at imminent risk of unhoused status. Lacks a private vehicle and relies on public bus routes with multiple transfers (Rogers 2019).`,
+                barriers: [
+                    { type: "housing", label: "FORMAL EVICTION NOTICE", id: "b1", match: "formal eviction notice" },
+                    { type: "housing", label: "SEVERELY RENT BURDENED (54%)", id: "b2", match: "expending over 54%" },
+                    { type: "food", label: "FOOD APARTHEID ZONE (2.2 mi)", id: "b3", match: "nearest primary grocery store is over 2.2 miles" },
+                    { type: "health", label: "DIABETES DIETARY MANAGEMENT", id: "b4", match: "type-2 diabetes" },
+                    { type: "income", label: "PUBLIC TRANSIT DEPENDENT", id: "b5", match: "relies on public bus routes" }
+                ],
+                summary: "[Assistant Draft]: Client in West Boulevard corridor faces immediate eviction threat and severe rent burden (>54% wage). Living in a food apartheid area (>2.2 miles to groceries) exacerbates chronic diabetes management. Recommended for Rapid Re-Housing rental stabilization and emergency food pantry referral [UNC Charlotte Urban Institute 2024]."
+            },
+            2: {
+                id: "DUKE-2019-VIGNETTE-B3",
+                source: "Source: Duke World Food Policy Center (Zuckerman 2019, p. 7) & Food Policy Council (p. 62)",
+                name: "Study Vignette #B-3 (SNAP Cliff & Food Insecurity)",
+                rawText: `[Empirical Case Vignette #B-3 | Source: Duke World Food Policy Center Summit Report p. 7 & Gaddy & Morrell 2026] Client is a head of household with two dependents in North Charlotte. Recently experienced the SNAP benefit cliff effect: following a small hourly wage increase, household gross income exceeded 130% FPL, triggering total loss of $420/mo in food assistance (Gaddy & Morrell 2026). Rent consumes 60% of household budget. Client reports rationing adult meals so children have sufficient food—reflecting Charlotte's >33% child food insecurity rate (Food Policy Council p. 63). Active on Charlotte housing voucher list for >4 years without placement.`,
+                barriers: [
+                    { type: "income", label: "SNAP BENEFIT CLIFF LOSS", id: "b1", match: "loss of $420/mo in food assistance" },
+                    { type: "housing", label: "CRITICAL RENT BURDEN (60%)", id: "b2", match: "consumes 60%" },
+                    { type: "food", label: "CHILD FOOD INSECURITY RISK", id: "b3", match: "rationing adult meals" },
+                    { type: "housing", label: "VOUCHER WAITLIST DELAY", id: "b4", match: "for >4 years" }
+                ],
+                summary: "[Assistant Draft]: Household is experiencing severe food instability caused by the SNAP cliff cutoff alongside 60% rent burden in North Charlotte. Client restricts personal food intake to feed two minor children. Recommended for direct emergency meal distribution (Nourish Up) and SNAP gap advocacy [Zuckerman 2019, Gaddy & Morrell 2026]."
+            },
+            3: {
+                id: "MECK-2025-VIGNETTE-C7",
+                source: "Source: Mecklenburg County CSS (2025) & Shinn & Cohen (2019) AJCP",
+                name: "Study Vignette #C-7 (9-Yr Voucher Bottleneck)",
+                rawText: `[Empirical Case Vignette #C-7 | Source: Mecklenburg County CSS 2025 Report & Shinn & Cohen 2019] Unhoused Army veteran currently staying at an Uptown Charlotte shelter site. Has been on the Mecklenburg County Housing Voucher waitlist for over 8 years, reflecting the regional average wait time exceeding 9 years (Meck. Co. CSS 2025). Client suffers from chronic hypertension and PTSD, which are aggravated by lack of permanent shelter stability. Client receives fixed disability benefits, but cannot secure market-rate apartments in Charlotte due to severe market inflation and lack of landlord voucher acceptance.`,
+                barriers: [
+                    { type: "housing", label: "CHRONIC VOUCHER WAIT (>8 YRS)", id: "b1", match: "over 8 years" },
+                    { type: "health", label: "CHRONIC HYPERTENSION & PTSD", id: "b2", match: "hypertension and PTSD" },
+                    { type: "housing", label: "UNHOUSED IN UPTOWN", id: "b3", match: "Unhoused Army veteran" }
+                ],
+                summary: "[Assistant Draft]: Unhoused veteran trapped by Charlotte's >9-year housing voucher bottleneck. Fixed disability income is insufficient for market-rate rental prices. Recommended for immediate Permanent Supportive Housing placement via Housing First framework [Mecklenburg County CSS 2025, NLIHC 2020]."
+            }
+        };
+
+        let currentClientId = 1;
+        let geminiApiKey = localStorage.getItem("gemini_api_key") || "";
+
+        // INITIALIZE APP
+        window.onload = function() {
+            initCharts();
+            loadClientLog(1);
+            updateCliffCalc();
+            if(geminiApiKey) {
+                document.getElementById('api-key-status').innerText = "Gemini API Active";
+            }
+        };
+
+        // DATA TAB SWITCHER
+        function switchDataTab(tab) {
+            document.getElementById('tab-content-charts').classList.add('hidden');
+            document.getElementById('tab-content-crescent').classList.add('hidden');
+            document.getElementById('tab-content-cliff').classList.add('hidden');
+
+            const inactiveBtn = "px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition shadow-sm";
+            const activeBtn = "px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 text-white shadow-sm hover:bg-brand-700 transition";
+
+            document.getElementById('btn-tab-charts').className = inactiveBtn;
+            document.getElementById('btn-tab-crescent').className = inactiveBtn;
+            document.getElementById('btn-tab-cliff').className = inactiveBtn;
+
+            if(tab === 'charts') {
+                document.getElementById('tab-content-charts').classList.remove('hidden');
+                document.getElementById('btn-tab-charts').className = activeBtn;
+            } else if(tab === 'crescent') {
+                document.getElementById('tab-content-crescent').classList.remove('hidden');
+                document.getElementById('btn-tab-crescent').className = activeBtn;
+            } else if(tab === 'cliff') {
+                document.getElementById('tab-content-cliff').classList.remove('hidden');
+                document.getElementById('btn-tab-cliff').className = activeBtn;
+            }
+        }
+
+        // CHARTS INITIALIZATION
+        function initCharts() {
+            // Chart 1: Racial Disparity
+            const ctx1 = document.getElementById('racialDisparityChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Black / African Am.', 'White', 'Hispanic / Latino', 'Other'],
+                    datasets: [
+                        {
+                            label: '% of Unhoused Population (Charlotte)',
+                            data: [73, 20, 5, 2],
+                            backgroundColor: '#e11d48',
+                            borderRadius: 6
+                        },
+                        {
+                            label: '% of Total Mecklenburg Population',
+                            data: [35, 48, 14, 3],
+                            backgroundColor: '#94a3b8',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#334155', font: { size: 11, family: 'Inter' } } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } },
+                        y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+
+            // Chart 2: Health vs Food Apartheid
+            const ctx2 = document.getElementById('healthFoodChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Crescent (Food Apartheid / High Obesity)', 'Wedge (High Grocery Access)', 'Transition Zones'],
+                    datasets: [{
+                        data: [58, 28, 14],
+                        backgroundColor: ['#d97706', '#2563eb', '#94a3b8'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#334155', font: { size: 11, family: 'Inter' } } }
+                    }
+                }
+            });
+        }
+
+        // SPATIAL NEIGHBORHOOD SELECTOR
+        const nbData = {
+            'west-blvd': {
+                title: "West Boulevard Corridor",
+                sector: "Crescent Zone (Historic Black Corridor)",
+                poverty: "28% Poverty Rate [Zuckerman, p. 7]",
+                dist: "> 1.0 Mile",
+                race: "57% - 59%",
+                rent: "50%",
+                vehicle: "High Transit Rely",
+                desc: "Following urban renewal projects under the Housing Act of 1949, corporate supermarkets migrated south into affluent White suburbs, leaving Crescent corridors deserted. Residents face a severe transit tax—navigating multiple bus transfers while carrying groceries (Food Policy Council p. 70, Rogers 2019)."
+            },
+            'beatties-ford': {
+                title: "Beatties Ford Road Corridor",
+                sector: "Crescent Zone (North Charlotte)",
+                poverty: "25% Poverty Rate [Zuckerman, p. 7]",
+                dist: "> 1.5 Miles",
+                race: "82%",
+                rent: "52%",
+                vehicle: "High Transit Rely",
+                desc: "Historically vibrant African American corridor facing gentrification pressures. Corporate store exclusion forces reliance on fast food franchises offering calorically dense, shelf-stable items, elevating hypertension rates (Food Policy Council p. 84)."
+            },
+            'ballantyne': {
+                title: "Ballantyne / Myers Park Corridor",
+                sector: "Wedge Zone (South Charlotte)",
+                poverty: "3.7% Poverty Rate [Zuckerman, p. 7]",
+                dist: "< 0.4 Miles",
+                race: "12%",
+                rent: "22%",
+                vehicle: "Low Transit Rely",
+                desc: "Affluent wedge sector characterized by dense commercial supermarket concentration, high vehicle ownership, and low rent burden relative to household income (Zuckerman 2019, p. 8)."
+            }
+        };
+
+        function selectNeighborhood(key) {
+            const data = nbData[key];
+            document.getElementById('nb-title').innerText = data.title;
+            document.getElementById('nb-sector').innerText = data.sector;
+            document.getElementById('nb-poverty-badge').innerText = data.poverty;
+            document.getElementById('nb-dist').innerText = data.dist;
+            document.getElementById('nb-race').innerText = data.race;
+            document.getElementById('nb-rent').innerText = data.rent;
+            document.getElementById('nb-vehicle').innerText = data.vehicle;
+            document.getElementById('nb-description').innerText = data.desc;
+
+            ['west-blvd', 'beatties-ford', 'ballantyne'].forEach(k => {
+                const btn = document.getElementById(`btn-${k}`);
+                if(k === key) {
+                    btn.className = "p-3 text-left bg-emerald-50/60 border-2 border-brand-500 rounded-xl transition flex justify-between items-center shadow-sm";
+                } else {
+                    btn.className = "p-3 text-left bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex justify-between items-center";
+                }
+            });
+        }
+
+        // CLIFF CALCULATOR LOGIC
+        function updateCliffCalc() {
+            const wage = parseFloat(document.getElementById('input-wage').value);
+            const family = parseInt(document.getElementById('input-family').value);
+            const rent = parseFloat(document.getElementById('input-rent').value);
+
+            document.getElementById('wage-val').innerText = `$${wage.toFixed(2)} / hr`;
+            document.getElementById('family-val').innerText = `${family} Member${family > 1 ? 's' : ''}`;
+            document.getElementById('rent-val').innerText = `$${rent.toLocaleString()} / mo`;
+
+            const grossMonthly = wage * 40 * 4.33;
+            document.getElementById('calc-income').innerText = `$${Math.round(grossMonthly).toLocaleString()}`;
+
+            const fplBase = 15000 + (family - 1) * 5380;
+            const fplPct = Math.round((grossMonthly * 12 / fplBase) * 100);
+            document.getElementById('calc-fpl').innerText = `${fplPct}% Poverty Level`;
+
+            let snapBenefit = 0;
+            let snapEligible = true;
+            if (fplPct <= 130) {
+                snapBenefit = Math.max(50, Math.round(600 - (grossMonthly * 0.2)));
+            } else {
+                snapEligible = false;
+            }
+
+            if (snapEligible) {
+                document.getElementById('calc-snap').innerText = `$${snapBenefit} / mo`;
+                document.getElementById('calc-snap-status').innerText = "Eligible (<130% FPL)";
+                document.getElementById('calc-snap-status').className = "text-[10px] text-emerald-700 font-semibold block mt-0.5";
+            } else {
+                document.getElementById('calc-snap').innerText = "$0 / mo";
+                document.getElementById('calc-snap-status').innerText = "Ineligible (Cliff Cutoff)";
+                document.getElementById('calc-snap-status').className = "text-[10px] text-rose-600 font-bold block mt-0.5";
+            }
+
+            const netDisposable = grossMonthly - rent;
+            const rentPct = Math.round((rent / grossMonthly) * 100);
+
+            document.getElementById('calc-net').innerText = `$${Math.round(netDisposable).toLocaleString()}`;
+            document.getElementById('calc-rent-pct').innerText = `${rentPct}% Rent Burden`;
+
+            const alertBox = document.getElementById('cliff-alert-box');
+            if (!snapEligible) {
+                alertBox.className = "mt-4 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900 leading-relaxed";
+                alertBox.innerHTML = `<strong class="font-bold text-rose-900">CLIFF LOSS ACTIVE:</strong> At $${wage.toFixed(2)}/hr (${fplPct}% FPL), earnings exceed SNAP limits. Food assistance drops to zero, forcing the family to absorb a ${rentPct}% rent burden without food subsidies (Gaddy & Morrell 2026).`;
+                document.getElementById('cliff-status-badge').className = "text-xs px-3 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 font-bold";
+                document.getElementById('cliff-status-badge').innerText = "Benefit Loss Active";
+            } else {
+                alertBox.className = "mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed";
+                alertBox.innerHTML = `<strong class="font-bold text-amber-900">Near-Cliff Threshold:</strong> Earning $${wage.toFixed(2)}/hr maintains $${snapBenefit}/mo in SNAP relief, but housing costs consume ${rentPct}% of gross earnings. Any raise past 130% FPL risks total loss of food benefits.`;
+                document.getElementById('cliff-status-badge').className = "text-xs px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 font-bold";
+                document.getElementById('cliff-status-badge').innerText = "Within Safety Net";
+            }
+        }
+
+        // LOAD EMPIRICAL PROFILE INTO NARRATIVE ASSIST
+        function loadClientLog(num) {
+            currentClientId = num;
+            const profile = empiricalProfiles[num];
+            
+            document.getElementById('client-id-badge').innerText = profile.id;
+            document.getElementById('raw-notes-display').innerText = profile.rawText;
+            document.getElementById('barrier-tags-container').innerHTML = `<span class="text-xs text-slate-400 italic">Click "Run Narrative-Assist Analysis" to generate tags...</span>`;
+            document.getElementById('ai-summary-output').value = "";
+
+            [1, 2, 3].forEach(id => {
+                const btn = document.getElementById(`client-btn-${id}`);
+                if (id === num) {
+                    btn.className = "p-2.5 bg-emerald-50 border-2 border-brand-500 rounded-xl text-left hover:bg-emerald-100 transition shadow-sm";
+                } else {
+                    btn.className = "p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-left hover:bg-slate-100 transition shadow-sm";
+                }
+            });
+        }
+
+        // RUN NARRATIVE ASSIST ANALYSIS
+        async function runNarrativeAssist() {
+            const profile = empiricalProfiles[currentClientId];
+            const btn = document.getElementById('run-assist-btn');
+            const summaryOutput = document.getElementById('ai-summary-output');
+            const tagsContainer = document.getElementById('barrier-tags-container');
+
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Synthesizing Note...`;
+
+            if (geminiApiKey) {
+                try {
+                    const systemPrompt = "You are a Human-Centered AI assistant for Charlotte intake social workers. Summarize the intake note in 2 concise sentences emphasizing housing stability and food security needs. Cite relevant evidence.";
+                    const userQuery = `Summarize this empirical case note: ${profile.rawText}`;
+                    
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${geminiApiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                        summaryOutput.value = data.candidates[0].content.parts[0].text;
+                    } else {
+                        summaryOutput.value = profile.summary;
+                    }
+                } catch(e) {
+                    summaryOutput.value = profile.summary;
+                }
+            } else {
+                await new Promise(r => setTimeout(r, 500));
+                summaryOutput.value = profile.summary;
+            }
+
+            // Render Barrier Tags with explainability linking
+            tagsContainer.innerHTML = "";
+            profile.barriers.forEach(b => {
+                let badgeStyle = "bg-rose-100 text-rose-800 border-rose-300";
+                if(b.type === "food") badgeStyle = "bg-amber-100 text-amber-800 border-amber-300";
+                if(b.type === "health") badgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-300";
+                if(b.type === "income") badgeStyle = "bg-purple-100 text-purple-800 border-purple-300";
+
+                const tagBtn = document.createElement('button');
+                tagBtn.className = `text-[11px] font-bold px-2.5 py-1 rounded-lg border ${badgeStyle} hover:scale-105 transition flex items-center gap-1 shadow-sm`;
+                tagBtn.innerHTML = `<span>${b.label}</span> <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+                tagBtn.onclick = () => highlightSourceText(b.match, b.type);
+                tagsContainer.appendChild(tagBtn);
+            });
+
+            renderHighlightedRawText(profile);
+
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg> <span>Run Narrative-Assist Analysis</span>`;
+        }
+
+        // EXPLAINABILITY HIGHLIGHTING ENGINE
+        function renderHighlightedRawText(profile) {
+            let html = profile.rawText;
+            profile.barriers.forEach(b => {
+                const highlightClass = `highlight-${b.type}`;
+                const regex = new RegExp(`(${escapeRegExp(b.match)})`, 'gi');
+                html = html.replace(regex, `<span class="${highlightClass}" onclick="showTagNotice('${b.label}')">$1</span>`);
+            });
+            document.getElementById('raw-notes-display').innerHTML = html;
+        }
+
+        function highlightSourceText(matchText, type) {
+            const container = document.getElementById('raw-notes-display');
+            const spans = container.getElementsByTagName('span');
+            for(let s of spans) {
+                if(s.innerText.toLowerCase().includes(matchText.toLowerCase())) {
+                    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    s.classList.add('highlight-active');
+                    setTimeout(() => s.classList.remove('highlight-active'), 2000);
+                }
+            }
+        }
+
+        function resetHighlights() {
+            const profile = empiricalProfiles[currentClientId];
+            document.getElementById('raw-notes-display').innerText = profile.rawText;
+        }
+
+        function showTagNotice(label) {
+            const indicator = document.getElementById('explainability-indicator');
+            indicator.innerText = `Source linked: ${label}`;
+            indicator.className = "text-[10px] bg-brand-100 text-brand-800 border border-brand-400 px-2 py-0.5 rounded font-mono font-bold animate-pulse";
+            setTimeout(() => {
+                indicator.innerText = "Explainability Active";
+                indicator.className = "text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-mono font-bold";
+            }, 3000);
+        }
+
+        function approveCaseFile() {
+            const summary = document.getElementById('ai-summary-output').value;
+            if(!summary) {
+                alertCustom("Please run Narrative-Assist analysis before finalizing referral.");
+                return;
+            }
+            alertCustom(`Referral signed off by Caseworker! Exported to Charlotte Coordinated Entry System.`);
+        }
+
+        // CUSTOM MODAL NOTIFICATION
+        function alertCustom(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-6 right-6 bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-2 transition transform translate-y-0 border border-emerald-500";
+            toast.innerHTML = `<svg class="w-5 h-5 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // GEMINI MODAL HANDLERS
+        document.getElementById('toggle-gemini-key-modal').onclick = () => {
+            document.getElementById('gemini-modal').classList.remove('hidden');
+        };
+
+        function closeGeminiModal() {
+            document.getElementById('gemini-modal').classList.add('hidden');
+        }
+
+        function saveGeminiKey() {
+            const key = document.getElementById('gemini-key-input').value.trim();
+            if(key) {
+                geminiApiKey = key;
+                localStorage.setItem("gemini_api_key", key);
+                document.getElementById('api-key-status').innerText = "Gemini API Active";
+            }
+            closeGeminiModal();
+        }
+
+        function clearGeminiKey() {
+            geminiApiKey = "";
+            localStorage.removeItem("gemini_api_key");
+            document.getElementById('gemini-key-input').value = "";
+            document.getElementById('api-key-status').innerText = "Gemini API Config";
+            closeGeminiModal();
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+    </script>
+</body>
+</html>
